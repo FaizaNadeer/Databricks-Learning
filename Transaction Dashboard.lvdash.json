@@ -1,0 +1,407 @@
+{
+  "datasets": [
+    {
+      "name": "fd8dfeba",
+      "displayName": "sales_transactions",
+      "config": {
+        "version": "1.1",
+        "source": "samples.bakehouse.sales_transactions",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "7f1984ba",
+      "displayName": "From Notebook",
+      "queryLines": [
+        "select * from samples.bakehouse.sales_transactions"
+      ]
+    },
+    {
+      "name": "f0b259e6",
+      "displayName": "Product_Sales_Desc",
+      "queryLines": [
+        "Select product, sum(totalPrice)\r\n",
+        "From samples.bakehouse.sales_transactions\r\n",
+        "Group by product\r\n",
+        "Order by sum(totalPrice) desc"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "94db8496",
+      "displayName": "Dashboard",
+      "layout": [
+        {
+          "widget": {
+            "name": "total-price-by-product",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f0b259e6",
+                  "fields": [
+                    {
+                      "name": "sum(sum(totalPrice))",
+                      "expression": "SUM(`sum(totalPrice)`)"
+                    },
+                    {
+                      "name": "product",
+                      "expression": "`product`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "showDescription": true,
+                "title": {
+                  "value": "Total Price by Product",
+                  "fields": []
+                },
+                "description": {
+                  "value": "Golden Gate Ginger is our highest selling product 8 years in a row.",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(sum(totalPrice))",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "product",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                },
+                "color": {
+                  "fieldName": "sum(sum(totalPrice))",
+                  "scale": {
+                    "type": "quantitative",
+                    "colorRamp": {
+                      "mode": "single-hue",
+                      "baseColor": {
+                        "themeColorType": "visualizationColors",
+                        "position": 1
+                      }
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "520fe998",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fd8dfeba",
+                  "fields": [
+                    {
+                      "name": "count(paymentMethod)",
+                      "expression": "COUNT(`paymentMethod`)"
+                    },
+                    {
+                      "name": "paymentMethod",
+                      "expression": "`paymentMethod`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "count(paymentMethod)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Payment Method Breakdown"
+                },
+                "color": {
+                  "fieldName": "paymentMethod",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "quantity-of-sales-over-time",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fd8dfeba",
+                  "fields": [
+                    {
+                      "name": "daily(dateTime)",
+                      "expression": "DATE_TRUNC(\"DAY\", `dateTime`)"
+                    },
+                    {
+                      "name": "sum(quantity)",
+                      "expression": "SUM(`quantity`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Quantity of Sales over Time",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(dateTime)",
+                  "displayName": "Date",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(quantity)",
+                  "displayName": "Quantity Sold",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 8,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "9c0ab547",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 48px;line-height: 1.5;font-weight: 700;\">Transaction Dashboard</span></span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "11b5939a",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fd8dfeba",
+                  "fields": [
+                    {
+                      "name": "sum(totalPrice)",
+                      "expression": "SUM(`totalPrice`)"
+                    },
+                    {
+                      "name": "product",
+                      "expression": "`product`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(totalPrice)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "product",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                },
+                "color": {
+                  "fieldName": "sum(totalPrice)",
+                  "scale": {
+                    "type": "quantitative",
+                    "colorRamp": {
+                      "mode": "single-hue",
+                      "baseColor": {
+                        "themeColorType": "visualizationColors",
+                        "position": 1
+                      }
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 14,
+            "width": 12,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "f8821faf",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "2bb96c9f",
+            "queries": [
+              {
+                "name": "dashboards/01f1a50404d7102085a5033b2e8f53a4/datasets/01f1a5046e681a8c8196ca13dfde8869_quantity",
+                "query": {
+                  "datasetName": "fd8dfeba",
+                  "fields": [
+                    {
+                      "name": "min(quantity)",
+                      "expression": "MIN(`quantity`)"
+                    },
+                    {
+                      "name": "max(quantity)",
+                      "expression": "MAX(`quantity`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "selection": {
+                "defaultSelection": {
+                  "range": {
+                    "dataType": "INTEGER",
+                    "min": {
+                      "value": "0"
+                    },
+                    "max": {
+                      "value": "100"
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true
+              },
+              "widgetType": "range-slider",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "quantity",
+                    "queryName": "dashboards/01f1a50404d7102085a5033b2e8f53a4/datasets/01f1a5046e681a8c8196ca13dfde8869_quantity"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

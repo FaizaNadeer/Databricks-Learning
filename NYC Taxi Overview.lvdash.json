@@ -1,0 +1,239 @@
+{
+  "datasets": [
+    {
+      "name": "e40c54ae",
+      "displayName": "top_pickup_zips",
+      "queryLines": [
+        "select * from gold_taxi_by_zip order by trip_count desc limit 20"
+      ]
+    },
+    {
+      "name": "058c7655",
+      "displayName": "taxi_by_hour",
+      "queryLines": [
+        "select * from gold_taxi_by_hour  "
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "f5d427bb",
+      "displayName": "NYC Dashboard",
+      "layout": [
+        {
+          "widget": {
+            "name": "trip-volume-by-pickup-zip-code",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e40c54ae",
+                  "fields": [
+                    {
+                      "name": "pickup_zip",
+                      "expression": "`pickup_zip`"
+                    },
+                    {
+                      "name": "sum(trip_count)",
+                      "expression": "SUM(`trip_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 14px;\">Trip Volume by Pickup Zip Code</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "pickup_zip",
+                  "displayName": "Pickup Zip Code",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(trip_count)",
+                  "displayName": "Number of Trips",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "hourly-trip-volume-vs-average",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "058c7655",
+                  "fields": [
+                    {
+                      "name": "pickup_hour",
+                      "expression": "`pickup_hour`"
+                    },
+                    {
+                      "name": "sum(trip_count)",
+                      "expression": "SUM(`trip_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": {
+                  "value": "<span style=\"font-size: 14px;\">Trip Volume by Hour</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "pickup_hour",
+                  "displayName": "Hour of Day",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(trip_count)",
+                  "displayName": "Number of Trips",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 9,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "5e589888",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 24px;\">**NYC Taxi Trip Patterns: Pickup Zones & Hourly Demand**</span></span>\n",
+                "\n",
+                "<span style=\"text-align:center;display:block;\">Analysis of NYC taxi trips showing where rides originate and when demand peaks. Manhattan (100xx zip codes) accounts for the highest trip volume with short, low-cost rides, while airport zones (11xxx) show fewer trips, but significantly higher fares driven by distance. Hourly trends show trip volume rising through the evening and dropping after midnight, while average fares peak in the early morning (5-6am) — likely due to fewer, longer-distance rides such as early airport runs — and dip during the evening rush when trips are shorter and more frequent.</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "average-fare-by-hour",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "058c7655",
+                  "fields": [
+                    {
+                      "name": "pickup_hour",
+                      "expression": "`pickup_hour`"
+                    },
+                    {
+                      "name": "sum(avg_fare)",
+                      "expression": "SUM(`avg_fare`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 14px;\">Average Fare by Hour</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "pickup_hour",
+                  "displayName": "Hour of Day",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(avg_fare)",
+                  "displayName": "Average Fare ($)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
