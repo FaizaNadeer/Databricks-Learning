@@ -1,0 +1,258 @@
+{
+  "datasets": [
+    {
+      "name": "566ce5a1",
+      "displayName": "sensor_windows",
+      "queryLines": [
+        "SELECT\r\n",
+        "  time_window.start AS window_start,\r\n",
+        "  device_id,\r\n",
+        "  avg_temp,\r\n",
+        "  avg_humidity\r\n",
+        "FROM gold_sensor_5min_avg\r\n",
+        "ORDER BY window_start, device_id;"
+      ]
+    },
+    {
+      "name": "a86ac16a",
+      "displayName": "sensor_overall",
+      "queryLines": [
+        "SELECT device_id, count(*) AS window_count, avg(avg_temp) AS overall_avg_temp FROM gold_sensor_5min_avg GROUP BY device_id ORDER BY device_id"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "0e38dc53",
+      "displayName": "Dashboard",
+      "layout": [
+        {
+          "widget": {
+            "name": "average-temperature-by-device-over-time",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "566ce5a1",
+                  "fields": [
+                    {
+                      "name": "device_id",
+                      "expression": "`device_id`"
+                    },
+                    {
+                      "name": "minutely(window_start)",
+                      "expression": "DATE_TRUNC(\"MINUTE\", `window_start`)"
+                    },
+                    {
+                      "name": "sum(avg_temp)",
+                      "expression": "SUM(`avg_temp`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 14px;\">Average Temperature by Device Over Time</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "minutely(window_start)",
+                  "displayName": "Time Window",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(avg_temp)",
+                  "displayName": "Average Temperature (°C)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "device_id",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "average-humidity-by-device-over-time-1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "566ce5a1",
+                  "fields": [
+                    {
+                      "name": "device_id",
+                      "expression": "`device_id`"
+                    },
+                    {
+                      "name": "minutely(window_start)",
+                      "expression": "DATE_TRUNC(\"MINUTE\", `window_start`)"
+                    },
+                    {
+                      "name": "sum(avg_humidity)",
+                      "expression": "SUM(`avg_humidity`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 14px;\">Average Humidity by Device Over Time</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "minutely(window_start)",
+                  "displayName": "Time Window",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(avg_humidity)",
+                  "displayName": "Average Humidity (%)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "device_id",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "overall-average-temperature-by-device-1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "a86ac16a",
+                  "fields": [
+                    {
+                      "name": "device_id",
+                      "expression": "`device_id`"
+                    },
+                    {
+                      "name": "sum(overall_avg_temp)",
+                      "expression": "SUM(`overall_avg_temp`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"font-size: 14px;\">Overall Average Temperature by Device</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "device_id",
+                  "displayName": "Device ID",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(overall_avg_temp)",
+                  "displayName": "Average Temperature (°C)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "4f885fa4",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 24px;font-weight: 700;\">IoT Sensor Fleet Monitoring — Real-Time Temperature & Humidity</span></span>\n",
+                "\n",
+                "<span style=\"text-align:center;display:block;\">Live-updating pipeline built with Databricks Auto Loader-style ingestion and streaming tables, tracking 10 simulated IoT sensors. Data is cleaned and watermarked to handle late-arriving readings, then aggregated into 5-minute rolling windows per device. Most devices hold steady in the 25-30°C / 40-55% humidity range, with occasional short-lived swings (e.g. device\\_2 dipping to \\~20°C before recovering) — the kind of anomaly a real monitoring system would flag for investigation.</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 3
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
